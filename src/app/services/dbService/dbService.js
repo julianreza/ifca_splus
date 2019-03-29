@@ -106,7 +106,8 @@ class dbService {
             }).then(response => {
                 const data = response.data
                 if(data.Error===false){
-                    resolve(data.Pesan);
+                    localStorage.setItem('data', JSON.stringify(data.Data[0]))
+                    resolve([data.Pesan,token,data.Data[0]]);
                 }
                 else{
                     reject(data.Pesan);

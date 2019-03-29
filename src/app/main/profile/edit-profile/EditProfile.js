@@ -5,6 +5,7 @@ import {Link, withRouter} from 'react-router-dom';
 import connect from 'react-redux/es/connect/connect';
 import dbService from 'app/services/dbService';
 import * as Actions from 'app/store/actions';
+import * as userActions from 'app/auth/store/actions';
 import {bindActionCreators} from 'redux';
 import Formsy, {addValidationRule} from 'formsy-react';
 import _ from '@lodash';
@@ -55,7 +56,22 @@ class EditProfile extends Component {
         model.wherename = this.props.user.data.displayName
         dbService.editProfile(model)
         .then((user) => {
-            this.props.showMessage({message: user});
+            console.log(user)
+            const userdata = {
+                role  : user[2].Group_Cd,
+                token : user[1],
+                data: {
+                    displayName: user[2].name,
+                    photoURL   : user[2].pict,
+                    gender     : user[2].gender,
+                    email      : user[2].email,
+                    handphone  : user[2].Handphone,
+                    whatsapp   : user[2].wa_no,
+                    address    : user[2].address1 + ', ' + user[2].address2 + ', ' + user[2].address3
+                }
+            }
+            this.props.setUserData(userdata);
+            this.props.showMessage({message: user[0]});
         })
         .catch(error => {
             this.props.showMessage({message: error});
@@ -245,6 +261,7 @@ class EditProfile extends Component {
 function mapDispatchToProps(dispatch)
 {
     return bindActionCreators({
+            setUserData        : userActions.setUserData,
             showMessage        : Actions.showMessage,
             hideMessage        : Actions.hideMessage
         },
