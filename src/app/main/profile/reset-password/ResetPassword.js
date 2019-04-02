@@ -47,14 +47,6 @@ class ResetPassword extends Component {
         this.setState(_.set({...this.state}, event.target.name, event.target.type === 'checkbox' ? event.target.checked : event.target.value));
     };    
 
-    // canBeSubmitted()
-    // {
-    //     const {cpassword, password, passwordConfirm} = this.state;
-    //     cpassword.length > 0 &&            
-    //     password.length > 0 &&
-    //     password === passwordConfirm && this.enableButton()
-    // }
-
     onSubmit = (model) => {
         model.email = this.props.user.data.email
         dbService.resetPass(model)

@@ -11,7 +11,7 @@ const navigationConfig = [
         'title': 'Billing',
         'type' : 'item',
         'icon' : 'ballot',
-        'url'  : '/pages/coming-soon'
+        'url'  : '/billing'
     },
     {
         'id'   : 'helpdesk',
