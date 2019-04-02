@@ -17,7 +17,7 @@ class Billing extends Component {
                     root: classes.layoutRoot
                 }}
                 header={
-                    <div className="p-24"><h1>Billing Info test</h1></div>
+                    <div className="p-24"><h1>Billing Info wer</h1></div>
                 }
                 contentToolbar={
                     <div className="px-24"><h4>Content Toolbar</h4></div>
