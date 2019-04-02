@@ -47,7 +47,7 @@ class AnalyticsDashboardApp extends Component {
 
                             <FuseAnimate delay={600}>
                                 <Typography className="px-16 pb-8 text-18 font-300">
-                                    How many pages your users test
+                                    How many pages your users visit?
                                 </Typography>
                             </FuseAnimate>
 
