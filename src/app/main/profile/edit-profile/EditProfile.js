@@ -71,7 +71,10 @@ class EditProfile extends Component {
                 }
             }
             this.props.setUserData(userdata);
-            this.props.showMessage({message: user[0]});
+            this.props.showMessage({
+                message: user[0],
+                variant: 'success'
+            });
         })
         .catch(error => {
             this.props.showMessage({message: error});

@@ -34,10 +34,15 @@ class Auth extends Component {
                     }
                 }
                 this.props.setUserData(userdata);
-                this.props.showMessage({message: 'Login With ' + user.email});
+                this.props.showMessage({
+                    message: 'Login With ' + user.email,
+                });
             })
             .catch(error => {
-                this.props.showMessage({message: error});
+                this.props.showMessage({
+                    message: error,
+                    variant: 'error'
+                });
             })
         }
     };

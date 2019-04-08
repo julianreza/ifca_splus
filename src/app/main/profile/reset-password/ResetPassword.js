@@ -51,10 +51,16 @@ class ResetPassword extends Component {
         model.email = this.props.user.data.email
         dbService.resetPass(model)
         .then((user) => {
-            this.props.showMessage({message: user});
+            this.props.showMessage({
+                message: user,
+                variant: 'success'
+            });
         })
         .catch(error => {
-            this.props.showMessage({message: error});
+            this.props.showMessage({
+                message: error,
+                variant: 'error'
+            });
         });
     };
 

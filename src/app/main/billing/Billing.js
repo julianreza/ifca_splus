@@ -1,18 +1,31 @@
 import React, {Component} from 'react';
 import {FusePageCarded} from '@fuse';
-import {withStyles, Typography, List, ListItem, Tab, Tabs, Card, CardContent, CardHeader  } from '@material-ui/core';
+import {withStyles, Typography, List, ListItem, Tab, Tabs, Card, CardContent, CardHeader } from '@material-ui/core';
+import {isBrowser, isMobile} from "react-device-detect";
 
-const styles = theme => ({
-    layoutRoot: {},
-    card: {
-        minWidth: 275,
-        marginLeft: -30,
-        marginRight: -30,
-        marginTop: -30,
-        marginBottom: 20,
-    },
-});
+let styles = theme => ({});
 
+if (isBrowser){
+    styles = theme => ({
+        layoutRoot: {},
+        card: {
+            minWidth: '100%',
+            marginTop: -30,
+            marginBottom: 20,
+        }
+    });
+}
+else if(isMobile){
+    styles = theme => ({
+        layoutRoot: {},
+        card: {
+            minWidth: '119%',
+            marginLeft: -30,
+            marginTop: -30,
+            marginBottom: 20,
+        },
+    });
+}
 
 class Billing extends Component {
 
@@ -58,13 +71,17 @@ class Billing extends Component {
                                 <ListItem>
                                     <Card className={classes.card}>
                                         <CardHeader
-                                            subheader="IFCA Tower Office"
+                                            subheader={
+                                                <Typography align='left'>
+                                                    PT. Arha Karya Mandiri
+                                                </Typography>
+                                            }
                                         />
                                         <CardContent>
-                                            <Typography component="p">
-                                                This impressive paella is a perfect party dish and a fun meal to cook together with your
-                                                guests. Add 1 cup of frozen peas along with the mussels, if you like.
+                                            <Typography variant="h6">
+                                              PT. Arha Karya Mandiri
                                             </Typography>
+                                            <Typography component="p">Doc Date 2018-11-19</Typography>
                                         </CardContent>
                                     </Card>
                                 </ListItem>
@@ -110,9 +127,9 @@ class Billing extends Component {
                             </List>
                         )}
                         {value === 1 && (
-                            <div>
-                                <h3 className="mb-16">Item Two</h3>
-                            </div>
+                            <List component="nav">
+                                <h1>test</h1>
+                            </List>
                         )}
                     </div>
                 }
