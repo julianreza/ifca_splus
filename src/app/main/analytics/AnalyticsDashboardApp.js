@@ -55,7 +55,7 @@ class AnalyticsDashboardApp extends Component {
                                 <Widget5 data={widgets.widget5}/>
                             </div>
 
-                            <FuseAnimate delay={600}>
+                            {/* <FuseAnimate delay={600}>
                                 <Typography className="px-16 pb-8 text-18 font-300">
                                     Where are your users?
                                 </Typography>
@@ -63,12 +63,12 @@ class AnalyticsDashboardApp extends Component {
 
                             <div className="widget w-full p-16 pb-32">
                                 <Widget6 data={widgets.widget6}/>
-                            </div>
+                            </div> */}
                         </div>
 
                         <div className="flex flex-wrap w-full md:w-320 pt-16">
 
-                            <div className="mb-32 w-full sm:w-1/2 md:w-full">
+                            {/* <div className="mb-32 w-full sm:w-1/2 md:w-full">
                                 <FuseAnimate delay={600}>
                                     <Typography className="px-16 pb-8 text-18 font-300">
                                         What are your top devices?
@@ -78,11 +78,11 @@ class AnalyticsDashboardApp extends Component {
                                 <div className="widget w-full p-16">
                                     <Widget7 data={widgets.widget7}/>
                                 </div>
-                            </div>
+                            </div> */}
 
                             <div className="mb-32 w-full sm:w-1/2 md:w-full">
 
-                                <FuseAnimate delay={600}>
+                                {/* <FuseAnimate delay={600}>
                                     <div className="px-16 pb-8 text-18 font-300">
                                         How are your sales?
                                     </div>
@@ -90,18 +90,18 @@ class AnalyticsDashboardApp extends Component {
 
                                 <div className="widget w-full p-16">
                                     <Widget8 data={widgets.widget8}/>
-                                </div>
+                                </div> */}
                             </div>
 
                             <div className="mb-32 w-full sm:w-1/2 md:w-full">
-                                <FuseAnimate delay={600}>
+                                {/* <FuseAnimate delay={600}>
                                     <Typography className="px-16 pb-8 text-18 font-300 lg:pt-0">
                                         What are your top campaigns?
                                     </Typography>
                                 </FuseAnimate>
                                 <div className="widget w-full p-16">
                                     <Widget9 data={widgets.widget9}/>
-                                </div>
+                                </div> */}
                             </div>
                         </div>
                     </div>
