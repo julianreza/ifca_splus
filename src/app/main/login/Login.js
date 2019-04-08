@@ -1,5 +1,5 @@
 import React, { Component }  from 'react'
-import { withStyles, Card, CardContent, Typography, InputAdornment, Icon, Button, Divider } from '@material-ui/core';
+import { withStyles, Card, CardContent, Typography, InputAdornment, Icon, Button, Divider, IconButton, Tooltip } from '@material-ui/core';
 import { darken } from '@material-ui/core/styles/colorManipulator';
 import { FuseAnimate, TextFieldFormsy } from '@fuse';
 import { withRouter, Link } from 'react-router-dom';
@@ -8,7 +8,10 @@ import Formsy from 'formsy-react';
 import { bindActionCreators } from 'redux';
 import connect from 'react-redux/es/connect/connect';
 import * as authActions from 'app/auth/store/actions';
+import Visibility from '@material-ui/icons/Visibility';
+import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import _ from '@lodash';
+import { red } from '@material-ui/core/colors';
 
 const styles = theme => ({
     root: {
@@ -42,6 +45,10 @@ class Login extends Component {
         this.props.submitLogin(model);
     };
 
+    handleClickShowPassword = () => {
+        this.setState(state => ({ showPassword: !state.showPassword }));
+    };
+
     componentDidUpdate(prevProps, prevState)
     {
         if ( this.props.login.error && (this.props.login.error.email || this.props.login.error.password) )
@@ -72,7 +79,7 @@ class Login extends Component {
                     </FuseAnimate>
                     <FuseAnimate animation="transition.slideUpIn" delay={300}>
                         <Typography variant="h3" color="inherit" className="font-light">
-                            Welcome to the IFCA CSM
+                            Welcome to the IFCA
                         </Typography>
                     </FuseAnimate>
                     <FuseAnimate delay={400}>
@@ -104,16 +111,28 @@ class Login extends Component {
                                 label="Your Email"
                                 validations={{isEmail:true}}
                                 validationErrors={{isEmail: 'This is not a valid email'}}
-                                InputProps={{endAdornment: <InputAdornment position="end"><Icon className="text-20" color="action">email</Icon></InputAdornment>}}
+                                InputProps={{endAdornment: <InputAdornment position="end"><Tooltip title="Email"><IconButton><Icon className="text-20" color="action">email</Icon></IconButton></Tooltip></InputAdornment>}}
                                 variant="outlined"
                                 required />
 
                                 {/* INPUT PASSWOORD */}
                                 <TextFieldFormsy className="mb-16"
-                                type="password"
+                                type={this.state.showPassword ? 'text' : 'password'}
                                 name="password"
                                 label="Enter Password"
-                                InputProps={{endAdornment: <InputAdornment position="end"><Icon className="text-20" color="action">vpn_key</Icon></InputAdornment>}}
+                                InputProps={{
+                                    endAdornment: (
+                                        <InputAdornment position="end">
+                                            <Tooltip title={this.state.showPassword ? 'Show Password' : 'Hide Password'}>
+                                                <IconButton
+                                                    aria-label="Toggle password visibility"
+                                                    onClick={this.handleClickShowPassword}>
+                                                    {this.state.showPassword ? <VisibilityOff /> : <Visibility />}
+                                                </IconButton>
+                                            </Tooltip>
+                                        </InputAdornment>
+                                    ),
+                                }}
                                 variant="outlined"
                                 required />
 
@@ -148,7 +167,8 @@ class Login extends Component {
                             {/* BUTTON GOOGLE */}
                             <Button className="normal-case w-192 mb-8"
                             variant="contained"
-                            color="primary"
+                            color="secondary"
+                            style={{backgroundColor: red[500]}}
                             size="small">
                                 Log in with Google
                             </Button>

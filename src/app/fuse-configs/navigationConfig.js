@@ -4,7 +4,7 @@ const navigationConfig = [
         'title': 'Dashboard',
         'type' : 'item',
         'icon' : 'ballot',
-        'url'  : '/dashboard'
+        'url'  : '/dashboards'
     },
     {
         'id'   : 'billing',
@@ -18,7 +18,7 @@ const navigationConfig = [
         'title': 'Helpdesk',
         'type' : 'item',
         'icon' : 'ballot',
-        'url'  : '/pages/coming-soon'
+        'url'  : '/helpdesk'
     },
     {
         'id'   : 'meter',
