@@ -3,10 +3,9 @@ import {withStyles, Typography, Button, FormControlLabel, MenuItem, Radio, Grid,
 import Formsy, {addValidationRule} from 'formsy-react';
 import {TextFieldFormsy, RadioGroupFormsy, SelectFormsy, FuseAnimateGroup} from '@fuse';
 import VideoThumbnail from 'react-video-thumbnail';
-import axios from 'axios';
 import dbService from 'app/services/dbService';
 import connect from 'react-redux/es/connect/connect';
-import {withRouter} from 'react-router-dom';
+import {withRouter, Redirect} from 'react-router-dom';
 import * as Actions from 'app/store/actions';
 import {bindActionCreators} from 'redux';
 
@@ -39,6 +38,7 @@ class Ticket extends Component {
         levelno         : '',
         lotno           : [],
         category        : [],
+        success         : false,
         validImageTypes : ['image/gif', 'image/jpeg', 'image/png']
     };
         
@@ -102,7 +102,6 @@ class Ticket extends Component {
         const files = event.target.files
         const length = files.length
         let images = []
-        let file = []
 
         for(let i = 0; i < length; i++){
             const key = Math.floor(Math.random() * 1000) + 1
@@ -142,6 +141,7 @@ class Ticket extends Component {
                 message: data,
                 variant: 'success'
             });
+            this.setState({ success: true })
         })
         .catch(error => {
             console.log(error)
@@ -156,7 +156,11 @@ class Ticket extends Component {
     render()
     {
         const {classes, user} = this.props;
-        const {images, intMedia, canSubmit, validImageTypes, debtor, lotno, levelno, category} = this.state;
+        const {images, intMedia, canSubmit, validImageTypes, debtor, lotno, levelno, category, success} = this.state;
+
+        if (success) {
+            return <Redirect to='/dashboards'/>
+        }
         
         return (
             <div>

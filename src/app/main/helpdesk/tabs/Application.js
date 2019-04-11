@@ -1,19 +1,115 @@
 import React, {Component} from 'react';
-import {Typography, Button, FormControlLabel, MenuItem, Radio, Grid, Icon, GridList, GridListTile, GridListTileBar, ListSubheader, IconButton } from '@material-ui/core';
+import {withStyles, Typography, Button, FormControlLabel, MenuItem, Radio, Grid, Icon, GridList, GridListTile, GridListTileBar, ListSubheader, IconButton } from '@material-ui/core';
 import Formsy, {addValidationRule} from 'formsy-react';
 import {TextFieldFormsy, RadioGroupFormsy, SelectFormsy, FuseAnimateGroup} from '@fuse';
-import VideoThumbnail from 'react-video-thumbnail';
+import dbService from 'app/services/dbService';
+import {bindActionCreators} from 'redux';
+import {Redirect, withRouter } from 'react-router-dom';
+import connect from 'react-redux/es/connect/connect';
+import * as Actions from 'app/store/actions';
 
+
+const styles = theme => ({});
+
+var formData = new FormData();
 class Application extends Component {
 
     state = {
         canSubmit       : false,
+        debtor          : [],
+        lotno           : [],
+        category        : [],
+        levelno         : '',
+        success         : false,
     };
+
+    disableButton = () => {
+        this.setState({canSubmit: false});
+    };
+
+    enableButton = () => {
+        this.setState({canSubmit: true});
+    };
+
+    getDataDebtor() {
+        dbService.getDataDebtor()
+        .then((data) => {
+            this.setState({ 'debtor': data })
+        })
+        .catch(error => {
+            console.log(error)
+        });
+    }
+
+    getDataCategory() {
+        dbService.getDataCategory('A')
+        .then((data) => {
+            this.setState({ 'category': data })
+        })
+        .catch(error => {
+            console.log(error)
+        });
+    }
+
+    handleChangeDebtor = (event) =>{
+        const debtor = event.target.value
+        dbService.getDataLotno(debtor)
+        .then((data) => {
+            this.setState({ 'lotno': data })
+        })
+        .catch(error => {
+            console.log(error)
+        });
+    }
+
+    handleChangeLotno = (event) =>{
+        const levelno = event.target.value
+        this.setState({ 'levelno': levelno })
+    }
+
+    handleChangeType = (event) =>{
+        const type = event.target.value
+        dbService.getDataCategory(type)
+        .then((data) => {
+            this.setState({ 'category': data })
+        })
+        .catch(error => {
+            console.log(error)
+        });
+    }
+
+    onSubmit = (model) => {
+        for ( var key in model ) {
+            formData.append(key, model[key]);
+        }
+
+        dbService.saveTicket(formData)
+        .then((data) => {
+            console.log(data)
+            this.props.showMessage({
+                message: data,
+                variant: 'success'
+            });
+            this.setState({ success: true })
+        })
+        .catch(error => {
+            console.log(error)
+        });
+    };
+
+    componentDidMount(){
+        this.getDataDebtor()
+        this.getDataCategory()
+    }
 
     render()
     {
-        const {classes} = this.props;
-        const {canSubmit} = this.state;
+        const {classes, user} = this.props;
+        const {canSubmit, debtor, lotno, levelno, category, success} = this.state;
+
+        if (success) {
+            return <Redirect to='/dashboards'/>
+        }
 
         return (
             <div>
@@ -32,9 +128,10 @@ class Application extends Component {
 
                     <RadioGroupFormsy
                         className="my-16"
-                        name="applicationType"
+                        name="ticketType"
                         label="Application Type"
                         value="A"
+                        onChange={this.handleChangeType}
                         required>
                         <FormControlLabel value="A" control={<Radio color="secondary"/>} label="Access"/>
                         <FormControlLabel value="P" control={<Radio color="secondary"/>} label="Parking"/>
@@ -44,7 +141,7 @@ class Application extends Component {
                     <TextFieldFormsy
                         className="my-16"
                         type="text"
-                        name="name"
+                        name="requestBy"
                         label="Name"
                         variant="outlined"
                         required
@@ -76,38 +173,42 @@ class Application extends Component {
                     </Grid>
 
                     <SelectFormsy
-                        className="my-16 w-full"
-                        name="companyName"
+                        className="my-16"
+                        name="debtor"
                         label="Company Name"
-                        required
-                        value="test1"
-                        variant="outlined">
-                        <MenuItem value="test1">Test 1</MenuItem>
-                        <MenuItem value="test2">Test 2</MenuItem>
-                        <MenuItem value="test3">Test 3</MenuItem>
+                        variant="outlined"
+                        value=''
+                        onChange={this.handleChangeDebtor}
+                        required>
+                        <MenuItem value=''></MenuItem>
+                        {debtor.map((data, i) => (
+                            <MenuItem value={data.debtor_acct} key={i}>{data.name} ({data.debtor_acct})</MenuItem>                            
+                        ))}
                     </SelectFormsy>
 
                     <Grid container spacing={8}>
                         <Grid item xs={6}>
                             <SelectFormsy
                                 className="my-16 w-full"
-                                name="codeh"
-                                label="Lot No"
-                                required
-                                value="1"
+                                name="lotno"
+                                onChange={this.handleChangeLotno}
+                                label={lotno.length === 0 ? 'No Have Lot No' : 'Lot No'}
+                                value=""
                                 variant="outlined">
-                                <MenuItem value="1">Lantai 1</MenuItem>
-                                <MenuItem value="2">Lantai 2</MenuItem>
-                                <MenuItem value="3">Lantai 3</MenuItem>
+                                <MenuItem value=''></MenuItem>
+                                {lotno.map((data, i) => (
+                                    <MenuItem value={data.lot_no} key={i}>{data.lot_no}</MenuItem>
+                                ))}
                             </SelectFormsy>
                         </Grid>
                         <Grid item xs={6}>
                             <TextFieldFormsy
                                 className="my-16"
                                 label="Floor"
-                                type="number"
+                                type="text"
                                 name="floor"
                                 variant="outlined"
+                                value={levelno}
                                 disabled
                                 fullWidth/>
                         </Grid>
@@ -125,14 +226,15 @@ class Application extends Component {
 
                     <SelectFormsy
                         className="my-16"
-                        name="reason"
+                        name="category"
                         label="Reason"
                         variant="outlined"
-                        value="test1"
+                        value=''
                         required>
-                        <MenuItem value="test1">Test 1</MenuItem>
-                        <MenuItem value="test2">Test 2</MenuItem>
-                        <MenuItem value="test3">Test 3</MenuItem>
+                        <MenuItem value=''></MenuItem>
+                        {category.map((data, i) => (
+                            <MenuItem value={data.category_cd} key={i}>{data.descs}</MenuItem>                            
+                        ))}
                     </SelectFormsy>
 
                     <TextFieldFormsy
@@ -158,6 +260,22 @@ class Application extends Component {
                         required
                         fullWidth/>
 
+                    <TextFieldFormsy
+                        className="my-16 hidden"
+                        type="text"
+                        name="customerType"
+                        variant="outlined"
+                        value="T"
+                        fullWidth/>
+                    
+                    <TextFieldFormsy
+                        className="my-16 hidden"
+                        type="text"
+                        name="complainSource"
+                        variant="outlined"
+                        value=""
+                        fullWidth/>
+
                     <Button
                         type="submit"
                         variant="contained"
@@ -175,4 +293,21 @@ class Application extends Component {
     }
 }
 
-export default Application;
+function mapDispatchToProps(dispatch)
+{
+    return bindActionCreators({
+            showMessage        : Actions.showMessage,
+            hideMessage        : Actions.hideMessage
+        },
+        dispatch);
+}
+
+function mapStateToProps({auth})
+{
+    return {
+        login: auth,
+        user: auth.user
+    }
+}
+
+export default withStyles(styles)(withRouter(connect(mapStateToProps, mapDispatchToProps)(Application)));
