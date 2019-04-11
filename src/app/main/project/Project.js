@@ -3,6 +3,7 @@ import {FuseAnimate} from '@fuse';
 import classNames from 'classnames';
 import {withStyles, Typography, GridList, GridListTile, GridListTileBar} from '@material-ui/core';
 import {Link} from 'react-router-dom';
+import dbService from 'app/services/dbService';
 
 const styles = theme => ({
     body    : {
@@ -15,16 +16,37 @@ const styles = theme => ({
 class Project extends Component {
 
     state = {
-        value: 0
+        project : []
     };
 
-    clickProject = () => {
-        console.log('wowo')
+    getData = () => {
+        dbService.getDataProject()
+        .then((data) => {
+            // console.log(data)
+            this.setState({ 'project': data })
+        })
+        .catch(error => {
+            console.log(error)
+        });
+    }
+
+    clickProject = (data) =>{
+        localStorage.setItem("dataproject", JSON.stringify({
+            cons        : data.db_profile,
+            project_no  : data.project_no,
+            entity_cd   : data.entity_cd,
+            project_name: data.project_descs
+        }));
+    }
+
+    componentDidMount(){
+        this.getData()
     }
 
     render()
     {
-        const {classes} = this.props;
+        const { classes } = this.props;
+        const { project } = this.state;
 
         return (
             <div className={classNames(classes.body, "justify-center h-full")}>
@@ -41,9 +63,11 @@ class Project extends Component {
                 <div className='mb-8'>
                 <FuseAnimate animation="transition.expandIn">
                     <GridList className='justify-center flex flex-warp' spacing={8} cols={0}>
+                    {project.map((data, i) => (
                         <GridListTile
-                            onClick={this.clickProject}
+                            key={i}
                             component={Link} to="/dashboards"
+                            onClick={()=>{this.clickProject(data)}}
                             classes={{
                                 root: "w-256 cursor-pointer hover:bg-blue rounded-lg",
                                 tile: "rounded-lg"
@@ -52,38 +76,11 @@ class Project extends Component {
                                 classNames(
                                     classes.productImageItem)
                             }>
-                            <img src='http://35.198.219.220:2121/ifca_splus/img/PlProject/IFCAApartement.jpg' className="h-full"/>
+                            <img src={data.picture_url} className="h-full"/>
                             <GridListTileBar
-                                title='IFCA Apartement & Resident'/>
+                                title={data.project_descs}/>
                         </GridListTile>
-                        <GridListTile
-                            classes={{
-                                root: "w-256 cursor-pointer hover:bg-blue rounded-lg",
-                                tile: "rounded-lg"
-                            }}
-                            className={
-                                classNames(
-                                    classes.productImageItem)
-                            }>>
-                            <img src='http://35.198.219.220:2121/ifca_splus/img/PlProject/IFCATower.jpg' className="h-full"/>
-                            <GridListTileBar
-                                title='IFCA Tower Office'
-                            />
-                        </GridListTile>
-                        <GridListTile
-                            classes={{
-                                root: "w-256 cursor-pointer hover:bg-blue rounded-lg",
-                                tile: "rounded-lg"
-                            }}
-                            className={
-                                classNames(
-                                    classes.productImageItem)
-                            }>>
-                            <img src='http://35.198.219.220:2121/ifca_splus/img/PlProject/IFCAMall.jpg' className="h-full"/>
-                            <GridListTileBar
-                                title='IFCA Mall'
-                            />
-                        </GridListTile>
+                    ))}
                     </GridList>
                 </FuseAnimate>
                 </div>
