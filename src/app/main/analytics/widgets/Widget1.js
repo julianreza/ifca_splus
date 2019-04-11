@@ -39,18 +39,7 @@ class Widget1 extends Component {
             pointBorderColor: theme.palette.secondary.contrastText,
             pointHoverBorderColor: theme.palette.secondary.contrastText
         }));
-        const settings = {
-            dots: true,
-            fade: true,
-            infinite: true,
-            speed: 500,
-            slidesToShow: 1,
-            centerPadding: '70px',
-            className: "center",
-            centerMode: true,
-            adaptiveHeight: true,
-            swipeToSlide: true,
-        }
+
 
         return (
             <MuiThemeProvider theme={mainThemeDark}>
@@ -66,11 +55,13 @@ class Widget1 extends Component {
 
                     </div>
                     <div className="container relative h-250 sm:h-256 pb-16">
-                        <Slider {...settings}>
-                        <Grid item className="container mx-auto px-4">
-                            {/* <img src={require('../../../../images/hasil1.jpg')} alt="noimage" className="sm:w-3/4 lg:w-3/4 lg:object-center"/> */}
-                        </Grid>
-                        </Slider>
+                        <Line
+                            data={{
+                                labels: data.labels,
+                                datasets: dataWithColors
+                            }}
+                            options={data.options}
+                        />
                     </div>
                 </div>
             </MuiThemeProvider>

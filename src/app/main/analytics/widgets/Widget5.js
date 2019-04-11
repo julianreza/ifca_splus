@@ -57,7 +57,7 @@ class Widget5 extends Component {
 
                 <Typography className="relative h-200 sm:h-320 sm:pb-16">
                     <Line
-                        data={{
+                        data={{ 
                             labels  : data.labels,
                             datasets: dataWithColors
                         }}

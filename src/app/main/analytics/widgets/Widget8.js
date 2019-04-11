@@ -1,82 +1,62 @@
-import React, {Component} from 'react';
-import {withStyles, AppBar, Card, Icon, IconButton, Tab, Tabs, Typography} from '@material-ui/core';
-import {Line} from 'react-chartjs-2';
+import React, { Component } from 'react';
+import { withStyles, AppBar, Card, Icon, IconButton, Tab, Tabs, Typography, Grid } from '@material-ui/core';
+import { Line } from 'react-chartjs-2';
+
+
 
 class Widget8 extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            tabIndex: 0,
+            status: [
+                { id: 'S', nama: 'Processed', color: 'red' },
+                { id: 'A', nama: 'Confirm', color: 'blue' },
+                { id: 'D', nama: 'Cancelled', color: 'green' },
+            ]
+        }
+    }
 
-    state = {
-        tabIndex: 0
-    };
 
     handleChange = (event, tabIndex) => {
-        this.setState({tabIndex});
+        this.setState({ tabIndex });
     };
 
     handleChangeIndex = index => {
-        this.setState({tabIndex: index});
+        this.setState({ tabIndex: index });
     };
 
-    render()
-    {
-        const {data, theme} = this.props;
-        const {tabIndex} = this.state;
+    render() {
+        const { data, theme } = this.props;
+        const statuss = [
+            { id: 'P', nama: 'Processed', colors: '#90EE90', icons: 'history', messages: 'Your Ticket Has Been Processed', wonumbs: '#WO12931' },
+            { id: 'D', nama: 'Cancelled', colors: '#CD5C5C', icons: 'delete_forever', messages: 'Your Ticket Has Been Cancelled', wonumbs: '#WO945824' },
+            { id: 'C', nama: 'Confirmed', colors: '#87CEFA', icons: 'offline_pin', messages: 'Your Ticket Has Been Confirmed', wonumbs: '#WO8498121' },
+        ]
+        const { tabIndex } = this.state;
         const dataWithColors = data.datasets[tabIndex].map(obj => ({
             ...obj,
             borderColor: theme.palette.secondary.main
         }));
         return (
-            <Card className="w-full rounded-8 shadow-none border-1">
-
-                <AppBar position="static">
-
-                    <div className="p-16 pr-4 flex flex-row items-center justify-between">
-
-                        <div className="pr-16">
-                            <Typography className="h1 font-300" color="inherit">Sales</Typography>
-                            <Typography className="h5" color="inherit">Lifetime sum of your sales</Typography>
-                        </div>
-
-                        <div>
-                            <IconButton aria-label="more" color="inherit">
-                                <Icon>more_vert</Icon>
-                            </IconButton>
-                        </div>
-                    </div>
-                    <div className="p-16 pt-8 flex flex-row justify-between items-end">
-                        <Typography className="text-48 font-300 leading-none" color="inherit">{data.today}</Typography>
-                        <div className="flex flex-row items-center">
-                            {data.change.value > 0 && (
-                                <Icon className="text-green">trending_up</Icon>
-                            )}
-                            {data.change.value < 0 && (
-                                <Icon className="text-red">trending_down</Icon>
-                            )}
-                            <div className="ml-8">
-                                {data.change.value}
-                                ({data.change.percentage}%)
+            <Card className="w-full rounded-8 shadow-md md:w-full">
+                {
+                    statuss.map((data, i) => {
+                        return <div key={i} className="relative p-16 pr-4 flex flex-row items-center justify-between">
+                            <div className="static rounded-full h-48 w-48 flex items-center justify-center" style={{ backgroundColor: '#E6790D' }}>
+                                <Icon>{data.icons}</Icon>
+                            </div>
+                            <div className="p-8 h-64 w-5/6 border-none">
+                                <Typography style={{ color: data.colors }}>{data.nama} : {data.wonumbs}</Typography>
+                                <Typography className="h6">{data.messages}</Typography>
+                                <Typography variant="caption">at March 9 - 12:03 PM</Typography>
                             </div>
                         </div>
-                    </div>
-                    <Tabs
-                        value={tabIndex}
-                        onChange={this.handleChange}
-                        variant="fullWidth"
-                    >
-                        <Tab label="1Day" className="min-w-0"/>
-                        <Tab label="1Week" className="min-w-0"/>
-                        <Tab label="1Month" className="min-w-0"/>
-                    </Tabs>
-                </AppBar>
-                <Line
-                    data={{
-                        labels  : data.labels,
-                        datasets: dataWithColors
-                    }}
-                    options={data.options}
-                />
+                    })
+                }
             </Card>
         );
     }
 }
 
-export default withStyles(null, {withTheme: true})(Widget8);
+export default withStyles(null, { withTheme: true })(Widget8);

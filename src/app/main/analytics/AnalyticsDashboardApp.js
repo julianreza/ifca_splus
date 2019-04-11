@@ -1,9 +1,9 @@
-import React, {Component} from 'react';
-import {Typography} from '@material-ui/core';
-import {FuseAnimate} from '@fuse';
-import {connect} from 'react-redux';
-import {withRouter} from 'react-router-dom'
-import {bindActionCreators} from 'redux';
+import React, { Component } from 'react';
+import { Typography } from '@material-ui/core';
+import { FuseAnimate } from '@fuse';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom'
+import { bindActionCreators } from 'redux';
 import Widget1 from './widgets/Widget1';
 import Widget2 from './widgets/Widget2';
 import Widget5 from './widgets/Widget5';
@@ -17,23 +17,20 @@ import reducer from './store/reducers';
 
 class AnalyticsDashboardApp extends Component {
 
-    componentDidMount()
-    {
+    componentDidMount() {
         this.props.getWidgets();
     }
 
-    render()
-    {
+    render() {
 
-        const {widgets} = this.props;
-        if ( !widgets )
-        {
+        const { widgets } = this.props;
+        if (!widgets) {
             return null;
         }
         return (
             <div className="w-full">
 
-                <Widget1 data={widgets.widget1}/>
+                <Widget1 data={widgets.widget1} />
 
                 <FuseAnimate animation="transition.slideUpIn" delay={200}>
 
@@ -42,7 +39,7 @@ class AnalyticsDashboardApp extends Component {
                         <div className="flex flex-1 flex-col min-w-0">
 
                             <div className="widget w-full p-16 pb-32">
-                                <Widget2 data={widgets.widget5}/>
+                                <Widget2 data={widgets.widget5} />
                             </div>
 
                             <FuseAnimate delay={600}>
@@ -51,8 +48,8 @@ class AnalyticsDashboardApp extends Component {
                                 </Typography>
                             </FuseAnimate>
 
-                            <div className="widget w-full p-16 pb-32">
-                                <Widget5 data={widgets.widget5}/>
+                            <div className="widget w-full p-16 pl-7 pb-32">
+                                <Widget5 data={widgets.widget5} />
                             </div>
 
                             {/* <FuseAnimate delay={600}>
@@ -62,7 +59,7 @@ class AnalyticsDashboardApp extends Component {
                             </FuseAnimate>
 
                             <div className="widget w-full p-16 pb-32">
-                                <Widget6 data={widgets.widget6}/>
+                                <Widget6 data={widgets.widget6} />
                             </div> */}
                         </div>
 
@@ -80,17 +77,17 @@ class AnalyticsDashboardApp extends Component {
                                 </div>
                             </div> */}
 
-                            <div className="mb-32 w-full sm:w-1/2 md:w-full">
+                            <div className="mb-32 w-full sm:w-1/4 md:w-full">
 
-                                {/* <FuseAnimate delay={600}>
-                                    <div className="px-16 pb-8 text-18 font-300">
-                                        How are your sales?
-                                    </div>
+                                <FuseAnimate delay={600}>
+                                    <Typography className="px-16 pb-8 text-18 font-300">
+                                        Recent Activities
+                                    </Typography>
                                 </FuseAnimate>
 
                                 <div className="widget w-full p-16">
-                                    <Widget8 data={widgets.widget8}/>
-                                </div> */}
+                                    <Widget8 data={widgets.widget8} />
+                                </div>
                             </div>
 
                             <div className="mb-32 w-full sm:w-1/2 md:w-full">
@@ -111,15 +108,13 @@ class AnalyticsDashboardApp extends Component {
     };
 }
 
-function mapDispatchToProps(dispatch)
-{
+function mapDispatchToProps(dispatch) {
     return bindActionCreators({
         getWidgets: Actions.getWidgets
     }, dispatch);
 }
 
-function mapStateToProps({analyticsDashboardApp})
-{
+function mapStateToProps({ analyticsDashboardApp }) {
     return {
         widgets: analyticsDashboardApp.widgets.data
     }

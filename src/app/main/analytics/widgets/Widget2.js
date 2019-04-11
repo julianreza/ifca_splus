@@ -7,6 +7,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
 
+
 class Widget2 extends Component {
 
   state = {
@@ -39,34 +40,11 @@ class Widget2 extends Component {
       adaptiveHeight: true,
       swipeToSlide: true,
       arrows: true,
-      appendDots: dots => (
-        <div
-          style={{
-            paddingRight: "50px",
-            paddingBottom: "10px",
-            marginTop: "20px",
-          }}
-        >
-          <ul style={{ margin: "0px" }}> {dots} </ul>
-        </div>
-      ),
-      customPaging: i => (
-        <div
-          style={{  
-            width: "30px",
-            color: "white",
-            borderRadius: "200px",
-            backgroundColor: "black"
-          }}
-        >
-          {i + 1}
-        </div>
-      )
     };
 
 
     return (
-      <Card className="shadow">
+      <Card className="bg-white mx-auto max-w-md shadow-md rounded-lg overflow-hiddens">
         <CardHeader
           title="News and Promo"
         />
