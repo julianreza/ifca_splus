@@ -3,6 +3,12 @@ import {withStyles, Typography, Button, FormControlLabel, MenuItem, Radio, Grid,
 import Formsy, {addValidationRule} from 'formsy-react';
 import {TextFieldFormsy, RadioGroupFormsy, SelectFormsy, FuseAnimateGroup} from '@fuse';
 import VideoThumbnail from 'react-video-thumbnail';
+import axios from 'axios';
+import dbService from 'app/services/dbService';
+import connect from 'react-redux/es/connect/connect';
+import {withRouter} from 'react-router-dom';
+import * as Actions from 'app/store/actions';
+import {bindActionCreators} from 'redux';
 
 const styles = theme => ({
     productImageFeaturedStar: {
@@ -21,6 +27,7 @@ const styles = theme => ({
     }
 });
 
+var formData = new FormData();
 class Ticket extends Component {
 
     state = {
@@ -28,67 +35,149 @@ class Ticket extends Component {
         value           : 0,
         images          : [],
         intMedia        : 0,
+        debtor          : [],
+        levelno         : '',
+        lotno           : [],
+        category        : [],
         validImageTypes : ['image/gif', 'image/jpeg', 'image/png']
     };
+        
+    disableButton = () => {
+        this.setState({canSubmit: false});
+    };
+
+    enableButton = () => {
+        this.setState({canSubmit: true});
+    };
+
+    getDataDebtor() {
+        dbService.getDataDebtor()
+        .then((data) => {
+            this.setState({ 'debtor': data })
+        })
+        .catch(error => {
+            console.log(error)
+        });
+    }
+
+    getDataCategory() {
+        dbService.getDataCategory('R')
+        .then((data) => {
+            this.setState({ 'category': data })
+        })
+        .catch(error => {
+            console.log(error)
+        });
+    }
+
+    handleChangeDebtor = (event) =>{
+        const debtor = event.target.value
+        dbService.getDataLotno(debtor)
+        .then((data) => {
+            this.setState({ 'lotno': data })
+        })
+        .catch(error => {
+            console.log(error)
+        });
+    }
+
+    handleChangeLotno = (event) =>{
+        console.log(event.target)
+        const levelno = event.target.value
+        this.setState({ 'levelno': levelno })
+    }
+
+    handleChangeType = (event) =>{
+        const type = event.target.value
+        dbService.getDataCategory(type)
+        .then((data) => {
+            this.setState({ 'category': data })
+        })
+        .catch(error => {
+            console.log(error)
+        });
+    }
 
     handleAddMedia = (event) => {
         const files = event.target.files
         const length = files.length
         let images = []
+        let file = []
+
         for(let i = 0; i < length; i++){
+            const key = Math.floor(Math.random() * 1000) + 1
             images = [...images, {
-                key : Math.floor(Math.random() * 1000) + 1,
-                url : URL.createObjectURL(files[i]),
-                name: files[i].name,
-                type: files[i].type
+                key   : key,
+                url   : URL.createObjectURL(files[i]),
+                files : files[i],
+                name  : files[i].name,
+                type  : files[i].type
             }]
         }
+
         this.setState({
-            images: this.state.images.concat(images),
+            images   : this.state.images.concat(images),
             intMedia : this.state.intMedia + parseInt(length)
         })
-
     }
 
     handleDeleteMedia = (key) => {
-        let images = this.state.images
-
-        for( let i = 0; i < images.length; i++){
-            if ( images[i].key === key) {
-                images.splice(i, 1);
-            }
-        }
         this.setState({
-            images: images,
+            images: this.state.images.filter(image => image.key !== key),
             intMedia : this.state.intMedia - 1
         })
     }
 
+    onSubmit = (model) => {
+        this.state.images.forEach((data, key) => {
+            formData.append(key, data.files)
+        })
+        for ( var key in model ) {
+            formData.append(key, model[key]);
+        }
+
+        dbService.saveTicket(formData)
+        .then((data) => {
+            this.props.showMessage({
+                message: data,
+                variant: 'success'
+            });
+        })
+        .catch(error => {
+            console.log(error)
+        });
+    };
+
+    componentDidMount(){
+        this.getDataDebtor()
+        this.getDataCategory()
+    }
+
     render()
     {
-        const {classes} = this.props;
-        const {images, intMedia, canSubmit, validImageTypes} = this.state;
-
+        const {classes, user} = this.props;
+        const {images, intMedia, canSubmit, validImageTypes, debtor, lotno, levelno, category} = this.state;
+        
         return (
             <div>
                 <FuseAnimateGroup
                         enter={{
                             animation: "transition.slideUpBigIn"
-                        }}
-                >
+                        }}>
                     <Formsy
-                    onValidSubmit={this.onSubmit}
-                    onValid={this.enableButton}
-                    onInvalid={this.disableButton}
-                    ref={(form) => this.form = form}
-                    encType="multipart/form-data"
-                    className="flex flex-col justify-center">
+                        onValidSubmit={this.onSubmit}
+                        onValid={this.enableButton}
+                        onInvalid={this.disableButton}
+                        ref={(form) => this.form = form}
+                        encType="multipart/form-data"
+                        className="flex flex-col justify-center">
 
                     <RadioGroupFormsy
                         className="my-16"
                         name="ticketType"
                         label="Ticket Type"
                         value="R"
+                        onChange={this.handleChangeType}
                         required>
                         <FormControlLabel value="R" control={<Radio color="secondary"/>} label="Request"/>
                         <FormControlLabel value="C" control={<Radio color="secondary"/>} label="Complain"/>
@@ -106,14 +195,16 @@ class Ticket extends Component {
 
                     <SelectFormsy
                         className="my-16"
-                        name="related"
-                        label="Name"
+                        name="debtor"
+                        label="Debtor"
                         variant="outlined"
-                        value="hai"
+                        value=''
+                        onChange={this.handleChangeDebtor}
                         required>
-                        <MenuItem value="hai">Hai</MenuItem>
-                        <MenuItem value="olivier">Olivier</MenuItem>
-                        <MenuItem value="kevin">Kevin</MenuItem>
+                        <MenuItem value=''></MenuItem>
+                        {debtor.map((data, i) => (
+                            <MenuItem value={data.debtor_acct} key={i}>{data.name} ({data.debtor_acct})</MenuItem>                            
+                        ))}
                     </SelectFormsy>
 
                     <TextFieldFormsy
@@ -122,6 +213,7 @@ class Ticket extends Component {
                         name="requestBy"
                         label="Request By"
                         variant="outlined"
+                        value={user.data.displayName}
                         required
                         fullWidth/>
 
@@ -144,6 +236,7 @@ class Ticket extends Component {
                                 label="Contact No"
                                 type="number"
                                 name="contactNo"
+                                placeholder='Input Hanphone Number'
                                 variant="outlined"
                                 required
                                 fullWidth/>
@@ -160,30 +253,32 @@ class Ticket extends Component {
                         fullWidth>
                         <MenuItem value="email">Email</MenuItem>
                         <MenuItem value="visit">Visit</MenuItem>
-                        <MenuItem value="by phone">By Phone</MenuItem>
+                        <MenuItem value="byphone">By Phone</MenuItem>
                     </SelectFormsy>
 
                     <Grid container spacing={8}>
                         <Grid item xs={6}>
                             <SelectFormsy
                                 className="my-16 w-full"
-                                name="codeh"
-                                label="Lot No"
-                                required
-                                value="1"
+                                name="lotno"
+                                onChange={this.handleChangeLotno}
+                                label={lotno.length === 0 ? 'No Have Lot No' : 'Lot No'}
+                                value=""
                                 variant="outlined">
-                                <MenuItem value="1">Lantai 1</MenuItem>
-                                <MenuItem value="2">Lantai 2</MenuItem>
-                                <MenuItem value="3">Lantai 3</MenuItem>
+                                <MenuItem value=''></MenuItem>
+                                {lotno.map((data, i) => (
+                                    <MenuItem value={data.lot_no} key={i}>{data.lot_no}</MenuItem>
+                                ))}
                             </SelectFormsy>
                         </Grid>
                         <Grid item xs={6}>
                             <TextFieldFormsy
                                 className="my-16"
                                 label="Floor"
-                                type="number"
+                                type="text"
                                 name="floor"
                                 variant="outlined"
+                                value={levelno}
                                 disabled
                                 fullWidth/>
                         </Grid>
@@ -194,11 +289,12 @@ class Ticket extends Component {
                         name="category"
                         label="Category Problem / Request"
                         variant="outlined"
-                        value="hai"
+                        value=''
                         required>
-                        <MenuItem value="hai">Hai</MenuItem>
-                        <MenuItem value="olivier">Olivier</MenuItem>
-                        <MenuItem value="kevin">Kevin</MenuItem>
+                        <MenuItem value=''></MenuItem>
+                        {category.map((data, i) => (
+                            <MenuItem value={data.category_cd} key={i}>{data.descs}</MenuItem>                            
+                        ))}
                     </SelectFormsy>
 
                     <TextFieldFormsy
@@ -229,10 +325,9 @@ class Ticket extends Component {
                         type="file"
                         accept="image/*,video/*"
                         multiple
-                        name="user[image]"
+                        name="user[]"
                         id="pictures"
-                        onChange={this.handleAddMedia}
-                        required/>
+                        onChange={this.handleAddMedia}/>
                     <div className='mb-48'>
                         <ListSubheader component="div" className="flex items-center pl-0 mb-24">
                             <label htmlFor="pictures">
@@ -288,4 +383,21 @@ class Ticket extends Component {
     }
 }
 
-export default withStyles(styles)(Ticket);
+function mapDispatchToProps(dispatch)
+{
+    return bindActionCreators({
+            showMessage        : Actions.showMessage,
+            hideMessage        : Actions.hideMessage
+        },
+        dispatch);
+}
+
+function mapStateToProps({auth})
+{
+    return {
+        login: auth,
+        user: auth.user
+    }
+}
+
+export default withStyles(styles)(withRouter(connect(mapStateToProps, mapDispatchToProps)(Ticket)));

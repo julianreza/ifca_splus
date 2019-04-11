@@ -55,6 +55,29 @@ class dbService {
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
+                    'token': token
+                }
+            }).then(response => {
+                const data = response.data
+                if(data.Error===false){
+                    resolve(data.Data);
+                }
+                else{
+                    reject(data.Pesan);
+                }
+            });
+        });
+    }
+
+    getDataProject = () => {
+        const token = JSON.parse(window.localStorage.getItem('token'))
+        const data = JSON.parse(window.localStorage.getItem('data'))
+        const email = data.email
+        return new Promise((resolve, reject) => {
+            axios.post('http://35.198.219.220:2121/alfaAPI/c_product_info/getData/IFCAMOBILE/'+email, {
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
                     'token': token,
                 }
             }).then(response => {
@@ -68,6 +91,117 @@ class dbService {
             });
         });
     }
+
+    getDataDebtor = () => {
+        const token = JSON.parse(window.localStorage.getItem('token'))
+        const dataproject = JSON.parse(window.localStorage.getItem('dataproject'))
+        const params = {
+            cons    : dataproject.cons,
+            entity  : dataproject.entity_cd,
+            project : dataproject.project_no
+        }
+        return new Promise((resolve, reject) => {
+            axios.post('http://35.198.219.220:2121/alfaAPI/c_ticket_entry/getDataDebtor', params, {
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'token': token,
+                }
+            }).then(response => {
+                const data = response.data
+                if(data.Error===false){
+                    resolve(data.Data);
+                }
+                else{
+                    reject(data.Pesan);
+                }
+            });
+        });
+    }
+
+    getDataLotno = (debtor) => {
+        const token = JSON.parse(window.localStorage.getItem('token'))
+        const dataproject = JSON.parse(window.localStorage.getItem('dataproject'))
+        const params = {
+            cons        : dataproject.cons,
+            entity      : dataproject.entity_cd,
+            project     : dataproject.project_no,
+            debtor_acct : debtor
+        }
+        return new Promise((resolve, reject) => {
+            axios.post('http://35.198.219.220:2121/alfaAPI/c_ticket_entry/getDataLot', params, {
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'token': token,
+                }
+            }).then(response => {
+                const data = response.data
+                if(data.Error===false){
+                    resolve(data.Data);
+                }
+                else{
+                    reject(data.Pesan);
+                }
+            });
+        });
+    }
+
+    getDataCategory = (type) => {
+        const token = JSON.parse(window.localStorage.getItem('token'))
+        const dataproject = JSON.parse(window.localStorage.getItem('dataproject'))
+        const params = {
+            cons    : dataproject.cons,
+            entity  : dataproject.entity_cd,
+            project : dataproject.project_no,
+            type_cd : type
+        }
+        return new Promise((resolve, reject) => {
+            axios.post('http://35.198.219.220:2121/alfaAPI/c_ticket_entry/getDataCategory', params, {
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'token': token,
+                }
+            }).then(response => {
+                const data = response.data
+                if(data.Error===false){
+                    resolve(data.Data);
+                }
+                else{
+                    reject(data.Pesan);
+                }
+            });
+        });
+    }
+
+    saveTicket = (data) => {
+        const token = JSON.parse(window.localStorage.getItem('token'))
+        const dataproject = JSON.parse(window.localStorage.getItem('dataproject'))
+        const datauser = JSON.parse(window.localStorage.getItem('data'))
+        data.append('cons',dataproject.cons)
+        data.append('entity',dataproject.entity_cd)
+        data.append('project',dataproject.project_no)
+        data.append('audit_user',datauser.name)
+        data.append('userID',datauser.rowID)
+        data.append('email',datauser.email)
+        return new Promise((resolve, reject) => {
+            axios.post('http://35.198.219.220:2121/alfaAPI/c_ticket_entry/saveTicketReact', data, {
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                }
+            }).then(response => {
+                const data = response.data
+                if(data.Error===false){
+                    resolve(data.Pesan);
+                }
+                else{
+                    reject(data.Pesan);
+                }
+            });
+        });
+    };
 
     logout = () => {
         localStorage.clear();
