@@ -52,7 +52,7 @@ export function logoutUser()
         }
 
         history.push({
-            pathname: '/'
+            pathname: '/project'
         });
 
         dbService.logout();

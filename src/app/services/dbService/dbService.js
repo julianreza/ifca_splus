@@ -40,11 +40,12 @@ class dbService {
     getData = () => {
         const data = JSON.parse(window.localStorage.getItem('data'))
         const token = JSON.parse(window.localStorage.getItem('token'))
+        const dataproject = JSON.parse(window.localStorage.getItem('dataproject'))
         if (!data){
             return;
         }  
         return new Promise((resolve) => {
-            resolve([data,token]);            
+            resolve([data,token,dataproject]);            
         })
     }
 
@@ -102,6 +103,33 @@ class dbService {
         }
         return new Promise((resolve, reject) => {
             axios.post('http://35.198.219.220:2121/alfaAPI/c_ticket_entry/getDataDebtor', params, {
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'token': token,
+                }
+            }).then(response => {
+                const data = response.data
+                if(data.Error===false){
+                    resolve(data.Data);
+                }
+                else{
+                    reject(data.Pesan);
+                }
+            });
+        });
+    }
+
+    getDataTicketByMonth = () => {
+        const token = JSON.parse(window.localStorage.getItem('token'))
+        const dataproject = JSON.parse(window.localStorage.getItem('dataproject'))
+        const params = {
+            cons    : dataproject.cons,
+            entity  : dataproject.entity_cd,
+            project : dataproject.project_no
+        }
+        return new Promise((resolve, reject) => {
+            axios.post('http://35.198.219.220:2121/alfaAPI/c_ticket_history/getDataTicketByMonth', params, {
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',

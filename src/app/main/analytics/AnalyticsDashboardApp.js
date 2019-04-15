@@ -1,16 +1,13 @@
 import React, { Component } from 'react';
 import { Typography } from '@material-ui/core';
-import { FuseAnimate } from '@fuse';
+import { FuseAnimate, FuseAnimateGroup } from '@fuse';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom'
 import { bindActionCreators } from 'redux';
 import Widget1 from './widgets/Widget1';
 import Widget2 from './widgets/Widget2';
-import Widget5 from './widgets/Widget5';
-import Widget6 from './widgets/Widget6';
-import Widget7 from './widgets/Widget7';
 import Widget8 from './widgets/Widget8';
-import Widget9 from './widgets/Widget9';
+import WidgetNow from './widgets/WidgetNow';
 import withReducer from 'app/store/withReducer';
 import * as Actions from './store/actions'
 import reducer from './store/reducers';
@@ -30,7 +27,7 @@ class AnalyticsDashboardApp extends Component {
         return (
             <div className="w-full">
 
-                <Widget1 data={widgets.widget1} />
+                <Widget1 data={widgets.widget1}/>
 
                 <FuseAnimate animation="transition.slideUpIn" delay={200}>
 
@@ -38,8 +35,25 @@ class AnalyticsDashboardApp extends Component {
 
                         <div className="flex flex-1 flex-col min-w-0">
 
-                            <div className="widget w-full p-16 pb-32">
-                                <Widget2 data={widgets.widget5} />
+                            <FuseAnimate delay={600}>
+                                <Typography className="p-16 pb-8 text-18 font-300">
+                                    How are your active users trending over time?
+                                </Typography>
+                            </FuseAnimate>
+
+                            <div className="flex flex-col sm:flex sm:flex-row pb-32">
+
+                                <div className="widget flex w-full sm:w-1/3 p-16">
+                                    {/* <Widget2 data={widgets.widget2}/> */}
+                                </div>
+
+                                <div className="widget flex w-full sm:w-1/3 p-16">
+                                    {/* <Widget3 data={widgets.widget3}/> */}
+                                </div>
+
+                                <div className="widget w-full sm:w-1/3 p-16">
+                                    {/* <Widget4 data={widgets.widget4}/> */}
+                                </div>
                             </div>
 
                             <FuseAnimate delay={600}>
@@ -48,64 +62,77 @@ class AnalyticsDashboardApp extends Component {
                                 </Typography>
                             </FuseAnimate>
 
-                            <div className="widget w-full p-16 pl-7 pb-32">
-                                <Widget5 data={widgets.widget5} />
+                            <div className="widget w-full p-16 pb-32">
+                                {/* <Widget5 data={widgets.widget5}/> */}
                             </div>
 
-                            {/* <FuseAnimate delay={600}>
+                            <FuseAnimate delay={600}>
                                 <Typography className="px-16 pb-8 text-18 font-300">
                                     Where are your users?
                                 </Typography>
                             </FuseAnimate>
 
                             <div className="widget w-full p-16 pb-32">
-                                <Widget6 data={widgets.widget6} />
-                            </div> */}
+                                {/* <Widget6 data={widgets.widget6}/> */}
+                            </div>
                         </div>
 
                         <div className="flex flex-wrap w-full md:w-320 pt-16">
 
-                            {/* <div className="mb-32 w-full sm:w-1/2 md:w-full">
-                                <FuseAnimate delay={600}>
-                                    <Typography className="px-16 pb-8 text-18 font-300">
-                                        What are your top devices?
-                                    </Typography>
-                                </FuseAnimate>
-
-                                <div className="widget w-full p-16">
-                                    <Widget7 data={widgets.widget7}/>
-                                </div>
-                            </div> */}
-
-                            <div className="mb-32 w-full sm:w-1/4 md:w-full">
-
-                                <FuseAnimate delay={600}>
-                                    <Typography className="px-16 pb-8 text-18 font-300">
-                                        Recent Activities
-                                    </Typography>
-                                </FuseAnimate>
-
-                                <div className="widget w-full p-16">
-                                    <Widget8 data={widgets.widget8} />
+                            <div className="mb-32 w-full sm:w-1/2 md:w-full">
+                                <div className="widget w-full p-4">
+                                    <FuseAnimate delay={600}>
+                                        <Widget8 data={widgets.widget8} />
+                                    </FuseAnimate>
                                 </div>
                             </div>
 
                             <div className="mb-32 w-full sm:w-1/2 md:w-full">
-                                {/* <FuseAnimate delay={600}>
+                                <div className="widget w-full p-4">
+                                    <FuseAnimate delay={600}>
+                                        <WidgetNow />
+                                    </FuseAnimate>
+                                </div>
+                            </div>
+
+                            <div className="mb-32 w-full sm:w-1/2 md:w-full">
+                                <FuseAnimate delay={600}>
                                     <Typography className="px-16 pb-8 text-18 font-300 lg:pt-0">
                                         What are your top campaigns?
                                     </Typography>
                                 </FuseAnimate>
                                 <div className="widget w-full p-16">
-                                    <Widget9 data={widgets.widget9}/>
-                                </div> */}
+                                    {/* <Widget9 data={widgets.widget9}/> */}
+                                </div>
                             </div>
                         </div>
                     </div>
                 </FuseAnimate>
             </div>
+            // <div className="w-full">
+            //      <Widget1 data={widgets.widget1} />
+            //      <div className='p-4 w-3/4'>
+            //         <div className='w-full'>
+            //             <Widget2 />
+            //         </div>
+            //      </div>
+            //      <div className='p-4 w-1/4'>
+            //      <FuseAnimateGroup
+            //             // className="flex flex-wrap"
+            //             enter={{
+            //                 animation: "transition.slideUpBigIn"
+            //             }}>
+            //             <div className='widget w-full sm:w-1/2 md:w-1/4 lg:1/4 p-12'>
+            //                 <Widget8 data={widgets.widget8} />
+            //             </div>
+            //             <div className='widget w-full sm:w-1/2 md:w-1/4 lg:1/4 p-12'>
+            //                 <WidgetNow />
+            //             </div>
+            //         </FuseAnimateGroup>
+            //      </div>
+            // </div>
         )
-    };
+    }
 }
 
 function mapDispatchToProps(dispatch) {

@@ -82,7 +82,6 @@ class Ticket extends Component {
     }
 
     handleChangeLotno = (event) =>{
-        console.log(event.target)
         const levelno = event.target.value
         this.setState({ 'levelno': levelno })
     }

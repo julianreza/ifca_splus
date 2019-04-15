@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { Button, Card, CardContent, Typography, withStyles, Avatar, AppBar, Toolbar, MenuItem} from '@material-ui/core';
+import { Button, Card, CardContent, Typography, withStyles, Avatar, AppBar, Toolbar, MenuItem, Icon} from '@material-ui/core';
 import {FuseAnimate, FusePageSimple, TextFieldFormsy, SelectFormsy} from '@fuse';
 import {Link, withRouter} from 'react-router-dom';
 import connect from 'react-redux/es/connect/connect';
@@ -138,7 +138,7 @@ class EditProfile extends Component {
                         </div>
 
                         <div className="flex items-center justify-end">
-                            <Link to="/profile/profile_information"><Button className="mr-8 normal-case" variant="contained" color="secondary" aria-label="Follow">Back</Button></Link>
+                            <Link to="/profile/profile_information"><Button className="mr-8 normal-case" variant="contained" color="secondary" aria-label="Follow"><Icon>arrow_back</Icon>&nbsp;&nbsp;Back</Button></Link>
                         </div>
                     </div>
                 }

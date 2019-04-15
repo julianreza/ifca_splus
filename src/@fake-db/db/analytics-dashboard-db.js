@@ -4,30 +4,6 @@ const analyticsDashboardAppDB = {
     widgets: {
         widget1: {
             chartType: 'line',
-            datasets : {
-                '2015': [
-                    {
-                        label: 'Sales',
-                        data : [1.9, 3, 3.4, 2.2, 2.9, 3.9, 2.5, 3.8, 4.1, 3.8, 3.2, 2.9],
-                        fill : 'start'
-                    }
-                ],
-                '2016': [
-                    {
-                        label: 'Sales',
-                        data : [2.2, 2.9, 3.9, 2.5, 3.8, 3.2, 2.9, 1.9, 3, 3.4, 4.1, 3.8],
-                        fill : 'start'
-                    }
-                ],
-                '2017': [
-                    {
-                        label: 'Sales',
-                        data : [3.9, 2.5, 3.8, 4.1, 1.9, 3, 3.8, 3.2, 2.9, 3.4, 2.2, 2.9],
-                        fill : 'start'
-                    }
-                ]
-            },
-            labels   : ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'],
             options  : {
                 spanGaps           : false,
                 legend             : {
@@ -37,8 +13,8 @@ const analyticsDashboardAppDB = {
                 layout             : {
                     padding: {
                         top  : 32,
-                        left : 32,
-                        right: 32
+                        left : 40,
+                        right: 40
                     }
                 },
                 elements           : {
@@ -69,9 +45,9 @@ const analyticsDashboardAppDB = {
                         {
                             display: false,
                             ticks  : {
-                                min     : 1.5,
-                                max     : 5,
-                                stepSize: 0.5
+                                min     : 1,
+                                max     : 100,
+                                stepSize: 10
                             }
                         }
                     ]
@@ -81,7 +57,8 @@ const analyticsDashboardAppDB = {
                         propagate: false
                     },
                     xLabelsOnTop: {
-                        active: true
+                        active: true,
+                        text  : 'Ticket'
                     }
                 }
             }

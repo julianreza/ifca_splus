@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { withStyles, AppBar, Card, Icon, IconButton, Tab, Tabs, Typography, Grid } from '@material-ui/core';
+import { withStyles, AppBar, Card, Icon, IconButton, Tab, Tabs, Typography, Grid, CardHeader, CardContent, List, ListItem, ListItemText, Avatar, ListItemSecondaryAction } from '@material-ui/core';
 import { Line } from 'react-chartjs-2';
 
 
@@ -32,6 +32,12 @@ class Widget8 extends Component {
             { id: 'P', nama: 'Processed', colors: '#90EE90', icons: 'history', messages: 'Your Ticket Has Been Processed', wonumbs: '#WO12931' },
             { id: 'D', nama: 'Cancelled', colors: '#CD5C5C', icons: 'delete_forever', messages: 'Your Ticket Has Been Cancelled', wonumbs: '#WO945824' },
             { id: 'C', nama: 'Confirmed', colors: '#87CEFA', icons: 'offline_pin', messages: 'Your Ticket Has Been Confirmed', wonumbs: '#WO8498121' },
+            { id: 'C', nama: 'Confirmed', colors: '#87CEFA', icons: 'offline_pin', messages: 'Your Ticket Has Been Confirmed', wonumbs: '#WO8498121' },
+            { id: 'C', nama: 'Confirmed', colors: '#87CEFA', icons: 'offline_pin', messages: 'Your Ticket Has Been Confirmed', wonumbs: '#WO8498121' },
+            { id: 'C', nama: 'Confirmed', colors: '#87CEFA', icons: 'offline_pin', messages: 'Your Ticket Has Been Confirmed', wonumbs: '#WO8498121' },
+            { id: 'C', nama: 'Confirmed', colors: '#87CEFA', icons: 'offline_pin', messages: 'Your Ticket Has Been Confirmed', wonumbs: '#WO8498121' },
+            { id: 'C', nama: 'Confirmed', colors: '#87CEFA', icons: 'offline_pin', messages: 'Your Ticket Has Been Confirmed', wonumbs: '#WO8498121' },
+            { id: 'C', nama: 'Confirmed', colors: '#87CEFA', icons: 'offline_pin', messages: 'Your Ticket Has Been Confirmed', wonumbs: '#WO8498121' },
         ]
         const { tabIndex } = this.state;
         const dataWithColors = data.datasets[tabIndex].map(obj => ({
@@ -40,20 +46,29 @@ class Widget8 extends Component {
         }));
         return (
             <Card className="w-full rounded-8 shadow-md md:w-full">
-                {
-                    statuss.map((data, i) => {
-                        return <div key={i} className="relative p-16 pr-4 flex flex-row items-center justify-between">
-                            <div className="static rounded-full h-48 w-48 flex items-center justify-center" style={{ backgroundColor: '#E6790D' }}>
+                <CardHeader
+                    title="Recent Activities"
+                    subheader="One Month"/>
+                <div className='h-256 overflow-auto'>
+                    <List>
+                    {statuss.map((data, i) => (
+                        <ListItem key={i+1}>
+                            <Avatar style={{backgroundColor: data.colors}}>
                                 <Icon>{data.icons}</Icon>
-                            </div>
-                            <div className="p-8 h-64 w-5/6 border-none">
-                                <Typography style={{ color: data.colors }}>{data.nama} : {data.wonumbs}</Typography>
-                                <Typography className="h6">{data.messages}</Typography>
-                                <Typography variant="caption">at March 9 - 12:03 PM</Typography>
-                            </div>
-                        </div>
-                    })
-                }
+                            </Avatar>
+                            <ListItemText
+                                primary={
+                                    <Typography variant='title'>{data.nama}</Typography>
+                                }
+                                secondary={[
+                                    <Typography variant='body1'>{data.messages}</Typography>,
+                                    <Typography variant='caption'>4 Hour Ago</Typography>
+                                ]}
+                                />
+                        </ListItem>
+                    ))}
+                    </List>
+                </div>
             </Card>
         );
     }
