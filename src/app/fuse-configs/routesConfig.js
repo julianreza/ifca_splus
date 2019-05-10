@@ -8,6 +8,7 @@ import {HelpdeskConfig} from 'app/main/helpdesk/HelpdeskConfig';
 import {ProfileConfig} from 'app/main/profile/ProfileConfig';
 import {pagesConfigs} from 'app/main/pages/pagesConfigs';
 import {ProjectConfig} from 'app/main/project/ProjectConfig';
+import {Setting_CsConfig} from 'app/main/setting/Setting_CsConfig';
 import {AnalyticsDashboardAppConfig} from 'app/main/analytics/AnalyticsDashboardAppConfig';
 
 const routeConfigs = [
@@ -17,6 +18,7 @@ const routeConfigs = [
     ProfileConfig,
     HelpdeskConfig,
     ProjectConfig,
+    Setting_CsConfig,
     ...pagesConfigs,
     AnalyticsDashboardAppConfig
 ];
@@ -26,7 +28,7 @@ const routeConfigs = [
     {
         path     : '/',
         exact    : true,
-        component: () => <Redirect to="/dashboards"/>
+        component: () => <Redirect to="/project"/>
     },
     {
         component: () => <Redirect to="/pages/coming-soon"/>
