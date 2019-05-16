@@ -3,10 +3,9 @@ import {withStyles, Typography, Button, FormControlLabel, MenuItem, Radio, Grid,
 import Formsy, {addValidationRule} from 'formsy-react';
 import {TextFieldFormsy, RadioGroupFormsy, SelectFormsy, FuseAnimateGroup} from '@fuse';
 import VideoThumbnail from 'react-video-thumbnail';
-import dbService from 'app/services/dbService';
 import connect from 'react-redux/es/connect/connect';
 import {withRouter, Redirect} from 'react-router-dom';
-import * as Actions from 'app/store/actions';
+import * as Actions from '../store/actions';
 import {bindActionCreators} from 'redux';
 
 const styles = theme => ({
@@ -34,11 +33,7 @@ class Ticket extends Component {
         value           : 0,
         images          : [],
         intMedia        : 0,
-        debtor          : [],
         levelno         : '',
-        lotno           : [],
-        category        : [],
-        success         : false,
         validImageTypes : ['image/gif', 'image/jpeg', 'image/png']
     };
         
@@ -50,51 +45,9 @@ class Ticket extends Component {
         this.setState({canSubmit: true});
     };
 
-    getDataDebtor() {
-        dbService.getDataDebtor()
-        .then((data) => {
-            this.setState({ 'debtor': data })
-        })
-        .catch(error => {
-            console.log(error)
-        });
-    }
-
-    getDataCategory() {
-        dbService.getDataCategory('R')
-        .then((data) => {
-            this.setState({ 'category': data })
-        })
-        .catch(error => {
-            console.log(error)
-        });
-    }
-
-    handleChangeDebtor = (event) =>{
-        const debtor = event.target.value
-        dbService.getDataLotno(debtor)
-        .then((data) => {
-            this.setState({ 'lotno': data })
-        })
-        .catch(error => {
-            console.log(error)
-        });
-    }
-
     handleChangeLotno = (event) =>{
         const levelno = event.target.value
         this.setState({ 'levelno': levelno })
-    }
-
-    handleChangeType = (event) =>{
-        const type = event.target.value
-        dbService.getDataCategory(type)
-        .then((data) => {
-            this.setState({ 'category': data })
-        })
-        .catch(error => {
-            console.log(error)
-        });
     }
 
     handleAddMedia = (event) => {
@@ -133,33 +86,13 @@ class Ticket extends Component {
         for ( var key in model ) {
             formData.append(key, model[key]);
         }
-
-        dbService.saveTicket(formData)
-        .then((data) => {
-            this.props.showMessage({
-                message: data,
-                variant: 'success'
-            });
-            this.setState({ success: true })
-        })
-        .catch(error => {
-            console.log(error)
-        });
+        this.props.saveTicket(formData)
     };
-
-    componentDidMount(){
-        this.getDataDebtor()
-        this.getDataCategory()
-    }
 
     render()
     {
-        const {classes, user} = this.props;
-        const {images, intMedia, canSubmit, validImageTypes, debtor, lotno, levelno, category, success} = this.state;
-
-        if (success) {
-            return <Redirect to='/dashboards'/>
-        }
+        const {classes, user, debtor, lotno, category, getLotNo, getCategory} = this.props;
+        const {images, intMedia, canSubmit, validImageTypes, levelno} = this.state;
         
         return (
             <div>
@@ -180,7 +113,8 @@ class Ticket extends Component {
                         name="ticketType"
                         label="Ticket Type"
                         value="R"
-                        onChange={this.handleChangeType}
+                        onChange={(e) => {getCategory(e.target.value)}}
+                        row
                         required>
                         <FormControlLabel value="R" control={<Radio color="secondary"/>} label="Request"/>
                         <FormControlLabel value="C" control={<Radio color="secondary"/>} label="Complain"/>
@@ -191,6 +125,7 @@ class Ticket extends Component {
                         name="customerType"
                         label="Customer Type"
                         value="C"
+                        row
                         required>
                         <FormControlLabel value="C" control={<Radio color="secondary"/>} label="Customer"/>                                          
                         <FormControlLabel value="V" control={<Radio color="secondary"/>} label="Visitor"/>
@@ -202,7 +137,7 @@ class Ticket extends Component {
                         label="Debtor"
                         variant="outlined"
                         value=''
-                        onChange={this.handleChangeDebtor}
+                        onChange={(e) => {getLotNo(e.target.value)}}
                         required>
                         <MenuItem value=''></MenuItem>
                         {debtor.map((data, i) => (
@@ -265,7 +200,7 @@ class Ticket extends Component {
                                 className="my-16 w-full"
                                 name="lotno"
                                 onChange={this.handleChangeLotno}
-                                label={lotno.length === 0 ? 'No Have Lot No' : 'Lot No'}
+                                label={!lotno ? 'No Have Lot No' : 'Lot No'}
                                 value=""
                                 variant="outlined">
                                 <MenuItem value=''></MenuItem>
@@ -389,17 +324,20 @@ class Ticket extends Component {
 function mapDispatchToProps(dispatch)
 {
     return bindActionCreators({
-            showMessage        : Actions.showMessage,
-            hideMessage        : Actions.hideMessage
+            getLotNo    : Actions.getLotNo,
+            getCategory : Actions.getCategory,
+            saveTicket  : Actions.saveTicket
         },
         dispatch);
 }
 
-function mapStateToProps({auth})
+function mapStateToProps({auth, helpdesk})
 {
     return {
-        login: auth,
-        user: auth.user
+        user        : auth.user,
+        debtor      : helpdesk.data.debtor,
+        lotno       : helpdesk.data.lotno,
+        category    : helpdesk.data.category
     }
 }
 

@@ -21,7 +21,8 @@ class RadioGroupFormsy extends Component {
             'onBlur',
             'onChange',
             'onKeyDown',
-            'variant'
+            'variant',
+            'row'
         ]);
 
         // An error message is returned only if the component is invalid

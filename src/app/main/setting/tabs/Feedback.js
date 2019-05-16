@@ -45,7 +45,8 @@ class Feedback extends Component {
                         },
                     ]}
                     data={data}
-                    defaultPageSize={5}
+                    defaultPageSize={6}
+                    showPageSizeOptions={false}
                     noDataText="No Item found" 
                 />
             </FuseAnimate>

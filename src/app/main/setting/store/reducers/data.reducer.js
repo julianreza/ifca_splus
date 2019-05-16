@@ -10,13 +10,6 @@ const initialState = {
     item            : [],
     feedback        : [],
     assign          : [],
-    contactDialog     : {
-        type : 'new',
-        props: {
-            open: false
-        },
-        data : null
-    }
 };
 
 const dataReducer = function (state = initialState, action) {
@@ -83,32 +76,6 @@ const dataReducer = function (state = initialState, action) {
             return {
                 ...state,
                 assign: action.payload
-            };
-        }
-        case Actions.OPEN_NEW_DIALOG:
-        {
-            return {
-                ...state,
-                contactDialog: {
-                    type : 'new',
-                    props: {
-                        open: true
-                    },
-                    data : null
-                }
-            };
-        }
-        case Actions.CLOSE_NEW_DIALOG:
-        {
-            return {
-                ...state,
-                contactDialog: {
-                    type : 'new',
-                    props: {
-                        open: false
-                    },
-                    data : null
-                }
             };
         }
         default:

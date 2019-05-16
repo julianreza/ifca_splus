@@ -1,10 +1,8 @@
 import {combineReducers} from 'redux';
-import section from './data.reducer';
-import dialog from './dialog.reducer';
+import data from './data.reducer';
 
 const reducer = combineReducers({
-    section,
-    dialog,
+    data,
 });
 
 export default reducer;

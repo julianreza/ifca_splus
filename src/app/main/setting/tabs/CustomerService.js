@@ -94,7 +94,8 @@ class CustomerService extends Component {
                         },
                     ]}
                     data={data}
-                    defaultPageSize={5}
+                    defaultPageSize={6}
+                    showPageSizeOptions={false}
                     noDataText="No Category Group found" 
                     SubComponent={(row) => (
                         <div className='p-16 font-bold'>

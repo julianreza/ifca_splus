@@ -6,8 +6,7 @@ import dbService from 'app/services/dbService';
 import {bindActionCreators} from 'redux';
 import {Redirect, withRouter } from 'react-router-dom';
 import connect from 'react-redux/es/connect/connect';
-import * as Actions from 'app/store/actions';
-
+import * as Actions from '../store/actions';
 
 const styles = theme => ({});
 
@@ -16,11 +15,7 @@ class Application extends Component {
 
     state = {
         canSubmit       : false,
-        debtor          : [],
-        lotno           : [],
-        category        : [],
         levelno         : '',
-        success         : false,
     };
 
     disableButton = () => {
@@ -31,85 +26,22 @@ class Application extends Component {
         this.setState({canSubmit: true});
     };
 
-    getDataDebtor() {
-        dbService.getDataDebtor()
-        .then((data) => {
-            this.setState({ 'debtor': data })
-        })
-        .catch(error => {
-            console.log(error)
-        });
-    }
-
-    getDataCategory() {
-        dbService.getDataCategory('A')
-        .then((data) => {
-            this.setState({ 'category': data })
-        })
-        .catch(error => {
-            console.log(error)
-        });
-    }
-
-    handleChangeDebtor = (event) =>{
-        const debtor = event.target.value
-        dbService.getDataLotno(debtor)
-        .then((data) => {
-            this.setState({ 'lotno': data })
-        })
-        .catch(error => {
-            console.log(error)
-        });
-    }
-
     handleChangeLotno = (event) =>{
         const levelno = event.target.value
         this.setState({ 'levelno': levelno })
-    }
-
-    handleChangeType = (event) =>{
-        const type = event.target.value
-        dbService.getDataCategory(type)
-        .then((data) => {
-            this.setState({ 'category': data })
-        })
-        .catch(error => {
-            console.log(error)
-        });
     }
 
     onSubmit = (model) => {
         for ( var key in model ) {
             formData.append(key, model[key]);
         }
-
-        dbService.saveTicket(formData)
-        .then((data) => {
-            console.log(data)
-            this.props.showMessage({
-                message: data,
-                variant: 'success'
-            });
-            this.setState({ success: true })
-        })
-        .catch(error => {
-            console.log(error)
-        });
+        this.props.saveTicket(formData)
     };
-
-    componentDidMount(){
-        this.getDataDebtor()
-        this.getDataCategory()
-    }
 
     render()
     {
-        const {classes, user} = this.props;
-        const {canSubmit, debtor, lotno, levelno, category, success} = this.state;
-
-        if (success) {
-            return <Redirect to='/dashboards'/>
-        }
+        const {debtor, lotno, category, getLotNo, getCategory} = this.props;
+        const {canSubmit, levelno} = this.state;
 
         return (
             <div>
@@ -131,7 +63,8 @@ class Application extends Component {
                         name="ticketType"
                         label="Application Type"
                         value="A"
-                        onChange={this.handleChangeType}
+                        onChange={(e) => {getCategory(e.target.value)}}
+                        row
                         required>
                         <FormControlLabel value="A" control={<Radio color="secondary"/>} label="Access"/>
                         <FormControlLabel value="P" control={<Radio color="secondary"/>} label="Parking"/>
@@ -178,7 +111,7 @@ class Application extends Component {
                         label="Company Name"
                         variant="outlined"
                         value=''
-                        onChange={this.handleChangeDebtor}
+                        onChange={(e) => {getLotNo(e.target.value)}}
                         required>
                         <MenuItem value=''></MenuItem>
                         {debtor.map((data, i) => (
@@ -192,7 +125,7 @@ class Application extends Component {
                                 className="my-16 w-full"
                                 name="lotno"
                                 onChange={this.handleChangeLotno}
-                                label={lotno.length === 0 ? 'No Have Lot No' : 'Lot No'}
+                                label={!lotno ? 'No Have Lot No' : 'Lot No'}
                                 value=""
                                 variant="outlined">
                                 <MenuItem value=''></MenuItem>
@@ -296,17 +229,19 @@ class Application extends Component {
 function mapDispatchToProps(dispatch)
 {
     return bindActionCreators({
-            showMessage        : Actions.showMessage,
-            hideMessage        : Actions.hideMessage
+            getLotNo    : Actions.getLotNo,
+            getCategory : Actions.getCategory,
+            saveTicket  : Actions.saveTicket
         },
         dispatch);
 }
 
-function mapStateToProps({auth})
+function mapStateToProps({helpdesk})
 {
     return {
-        login: auth,
-        user: auth.user
+        debtor      : helpdesk.data.debtor,
+        lotno       : helpdesk.data.lotno,
+        category    : helpdesk.data.category
     }
 }
 

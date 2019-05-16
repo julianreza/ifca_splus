@@ -80,7 +80,8 @@ class Category extends Component {
                         },
                       ]}
                     data={data}
-                    defaultPageSize={5}
+                    defaultPageSize={6}
+                    showPageSizeOptions={false}
                     noDataText="No contacts found"                 
                 />
             </FuseAnimate>

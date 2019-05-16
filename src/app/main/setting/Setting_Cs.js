@@ -15,12 +15,23 @@ import * as Actions from 'app/store/actions';
 import {bindActionCreators} from 'redux';
 import {withRouter} from 'react-router-dom';
 import connect from 'react-redux/es/connect/connect';
+import reducer from './store/reducers';
+import withReducer from 'app/store/withReducer';
+import New_Section from './form/New_Section';
+import New_CategoryGroup from './form/New_CategoryGroup';
+import New_Category from './form/New_Category';
+import New_CustomerService from './form/New_CustomerService';
+import New_ComplainSource from './form/New_ComplainSource';
+import New_Labour from './form/New_Labour';
+import New_Item from './form/New_Item';
+import New_Feedback from './form/New_Feedback';
+import New_Assign from './form/New_Assign';
 
 const styles = theme => ({
     addButton: {
         position: 'absolute',
         right   : 10,
-        bottom  : 12,
+        bottom  : 10,
         zIndex  : 99
     }
 });
@@ -29,7 +40,7 @@ class Setting_Cs extends Component {
 
     render()
     {
-        const {classes, openDialog, closeDialog} = this.props;
+        const {classes, openDialog} = this.props;
         const tabs = this.props.match.params.tab;
         return (
             <React.Fragment>
@@ -64,7 +75,6 @@ class Setting_Cs extends Component {
                         {tabs === 'Category' && (<Category/>)}
                         {tabs === 'CustomerService' && (<CustomerService/>)}
                         {tabs === 'ComplainSource' && (<ComplainSource/>)}
-                        {tabs === 'ComplainSource' && (<ComplainSource/>)}
                         {tabs === 'Labour' && (<Labour/>)}
                         {tabs === 'Item' && (<Item/>)}
                         {tabs === 'Feedback' && (<Feedback/>)}
@@ -85,9 +95,21 @@ class Setting_Cs extends Component {
                         color="primary"
                         aria-label="add"
                         className={classes.addButton}
-                        onClick={openDialog}
+                        onClick={() => openDialog({
+                            children : [
+                            tabs === 'Section' && (<New_Section/>),
+                            tabs === 'CategoryGroup' && (<New_CategoryGroup/>),
+                            tabs === 'Category' && (<New_Category/>),
+                            tabs === 'CustomerService' && (<New_CustomerService/>),
+                            tabs === 'ComplainSource' && (<New_ComplainSource/>),
+                            tabs === 'Labour' && (<New_Labour/>),
+                            tabs === 'Item' && (<New_Item/>),
+                            tabs === 'Feedback' && (<New_Feedback/>),
+                            tabs === 'Assign' && (<New_Assign/>)
+                            ]
+                        })}
                     >
-                        <Icon>person_add</Icon>
+                        <Icon>add</Icon>
                     </Fab>
                 </FuseAnimate>
                 </React.Fragment>
@@ -98,8 +120,7 @@ class Setting_Cs extends Component {
 function mapDispatchToProps(dispatch)
 {
     return bindActionCreators({
-        openDialog        : Actions.openDialog,
-        closeDialog       : Actions.closeDialog
+        openDialog     : Actions.openDialog,
     },
     dispatch);
 }

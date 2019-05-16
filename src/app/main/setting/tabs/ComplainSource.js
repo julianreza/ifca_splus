@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {withStyles, Typography, Icon} from '@material-ui/core';
+import {withStyles, Typography} from '@material-ui/core';
 import {FuseAnimate} from '@fuse';
 import withReducer from 'app/store/withReducer';
 import connect from 'react-redux/es/connect/connect';
@@ -45,7 +45,8 @@ class ComplainSource extends Component {
                         },
                     ]}
                     data={data}
-                    defaultPageSize={5}
+                    defaultPageSize={6}
+                    showPageSizeOptions={false}
                     noDataText="No Compalin Source found" 
                 />
             </FuseAnimate>
@@ -63,6 +64,7 @@ function mapDispatchToProps(dispatch)
 
 function mapStateToProps({complainsource})
 {
+    console.log(complainsource)
     return {
         data: complainsource.section.complainsource
     }

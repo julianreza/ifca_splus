@@ -3,12 +3,23 @@ import {withStyles, List, Tab, Tabs} from '@material-ui/core';
 import {FusePageCarded} from '@fuse';
 import Ticket from './tabs/Ticket';
 import Application from './tabs/Application';
+import * as Actions from './store/actions';
+import withReducer from 'app/store/withReducer';
+import reducer from './store/reducers';
+import {bindActionCreators} from 'redux';
+import connect from 'react-redux/es/connect/connect';
 
 class Helpdesk extends Component {
 
     state = {
         value       : 0
     };
+
+    componentDidMount()
+    {
+        this.props.getDebtor();
+        this.props.getCategory('R');
+    }
 
     disableButton = () => {
         this.setState({canSubmit: false});
@@ -42,8 +53,7 @@ class Helpdesk extends Component {
                         textColor="primary"
                         variant="fullWidth"
                         scrollButtons="off"
-                        className="w-full h-64"
-                    >
+                        className="w-full h-64">
                         <Tab className="h-64" label="Ticket Entry"/>
                         <Tab className="h-64" label="Application Entry"/>
                     </Tabs>
@@ -68,4 +78,12 @@ class Helpdesk extends Component {
     }
 }
 
-export default withStyles({withTheme: true})(Helpdesk);
+function mapDispatchToProps(dispatch)
+{
+    return bindActionCreators({
+        getDebtor     : Actions.getDebtor,
+        getCategory   : Actions.getCategory
+    }, dispatch);
+}
+
+export default withReducer('helpdesk', reducer)(withStyles({withTheme: true})(connect(null, mapDispatchToProps)(Helpdesk)));

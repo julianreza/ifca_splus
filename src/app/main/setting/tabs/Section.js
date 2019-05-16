@@ -40,19 +40,23 @@ class Section extends Component {
                         {
                           Header: "Section Cd",
                           accessor: "section_cd",
+                          maxWidth : 100
                         },
                         {
                           Header: "Descs",
                           accessor: "descs",
+                          minWidth : 200
                         },
                         {
                           Header: "Audit Date",
                           accessor: "audit_date",
+                          maxWidth : 200
                         }
                       ]}
                     data={data}
-                    defaultPageSize={5}
-                    noDataText="No contacts found"                 
+                    defaultPageSize={6}
+                    showPageSizeOptions={false}
+                    noDataText="No Section found"                 
                 />
             </FuseAnimate>
         )

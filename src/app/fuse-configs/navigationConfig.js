@@ -82,7 +82,6 @@ axios.post('http://35.198.219.220:2121/alfaAPI/c_menu',params, {
             })
         }
     });
-    // return navigationConfig
 })
 .catch(function (error) {
     console.log(error);

@@ -10,9 +10,6 @@ export const GET_ITEM = '[SETTING] GET ITEM';
 export const GET_FEEDBACK = '[SETTING] GET FEEDBACK';
 export const GET_ASSIGN = '[SETTING] GET ASSIGN';
 
-export const OPEN_NEW_DIALOG = '[SETTING] OPEN NEW DIALOG';
-export const CLOSE_NEW_DIALOG = '[SETTING] CLOSE NEW DIALOG';
-
 export function getSection()
 {
     const request = axios.post('http://35.198.219.220:2121/alfaAPI/c_setting_cs/getDataSection', {cons : 'IFCAPB'}, {
@@ -164,19 +161,5 @@ export function getAssign()
                 payload: response.data.Data
             })
         );
-}
-
-export function openNewDialog()
-{
-    return {
-        type: OPEN_NEW_DIALOG
-    }
-}
-
-export function closeNewDialog()
-{
-    return {
-        type: CLOSE_NEW_DIALOG
-    }
 }
 
